@@ -1,4 +1,4 @@
-package com.gznb.mozart.commons.caching.memory;
+package com.labijie.caching.testing;
 
 import com.labijie.caching.memory.MemoryCacheManager;
 import com.labijie.caching.memory.MemoryCacheOptions;
