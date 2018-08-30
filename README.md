@@ -5,10 +5,10 @@ example:
 ```
 ICacheManager memoryCache = new MemoryCache(new MemoryCacheOptions());
 
-//sliding expiring
+//sliding time expires
 memoryCache.set("2", new Object(), 3000L, true);
 
-//abslution expiring
+//absolute time expires
 memoryCache.set("a", new Object(), 1000L, false);
 
 //get
