@@ -11,8 +11,9 @@ repositories {
     mavenCentral()
 }
 
-
 dependencies {
-    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+    compile project(":core")
+    compile group: 'redis.clients', name: 'jedis', version: '2.9.0'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.6'
     testCompile("junit:junit:$junit_version")
 }

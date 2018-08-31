@@ -1,3 +1,4 @@
 rootProject.name = 'caching'
 include 'core'
+include 'redis'
 

@@ -1,22 +1,73 @@
-plugins {
-    id 'java'
+
+apply plugin: 'java'
+apply plugin: 'maven'
+
+ext{
+    junit_version = '4.12'
+    global_version = '1.0'
 }
 
 group 'com.labijie'
-version '1.0'
+version = global_version
+
 
 sourceCompatibility = 1.8
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
 subprojects {
-    dependencies {
-        testCompile group: 'junit', name: 'junit', version: '4.12'
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+
+    version = global_version
+
+
+    uploadArchives {
+        if (!project.name.startsWith("dummy")) {
+
+            System.out.println("deployer --->" + project.name)
+
+            repositories {
+                mavenDeployer {
+                    repository(url: "file://" + System.properties['user.home'] + "/.m2/repository")
+                    pom.project {
+                        artifactId "labijie-caching" + (project.name == "core" ?  "" : "-" + project.name)
+                        version project.rootProject.version
+                    }
+                }
+                //gradle -Dmu="admin" -Dmp="password" uploadArchives
+                def u = System.properties.getProperty("mu")
+                def p = System.properties.getProperty("mp")
+
+                if(u != null && p != null && !u.isEmpty() && !p.isEmpty()) {
+
+                    System.out.println("nexus deploy user: " + u)
+
+                    mavenDeployer {
+                        pom.project {
+                            artifactId "labijie-caching" + (project.name == "core" ?  "" : "-" + project.name)
+                            version project.rootProject.version
+                        }
+
+                        snapshotRepository(url: "http://nexus:26135/repository/maven-snapshots/") {
+                            authentication(userName: u, password: p)
+                        }
+
+                        repository(url: "http://nexus:26135/repository/maven-releases/") {
+                            authentication(userName: u, password: p)
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile "junit:junit:$junit_version"
 }
