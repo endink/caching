@@ -29,8 +29,8 @@ public abstract class RedisCacheManager implements ICacheManager {
     private RedisCacheOptions options;
 
     public RedisCacheManager(RedisCacheOptions redisOptions) {
-        Guard.ArgumentNotNull(redisOptions, "redisOptions");
-        Guard.ArgumentNotNullOrEmptyString(redisOptions.getServer(), "redisOptions.server");
+        Guard.argumentNotNull(redisOptions, "redisOptions");
+        Guard.argumentNotNullOrEmptyString(redisOptions.getServer(), "redisOptions.server");
         this.options = redisOptions;
     }
 

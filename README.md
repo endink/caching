@@ -17,4 +17,4 @@ memoryCache.get("a")
 ```
 
 
-redis support is coming soon.
+use SingleRedisCacheManager for redis support

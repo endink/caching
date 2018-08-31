@@ -22,7 +22,7 @@ public class MemoryCacheManager implements ICacheManager {
     private MemoryCache cache = null;
 
     public MemoryCacheManager(MemoryCacheOptions options) {
-        Guard.ArgumentNotNull(options, "options");
+        Guard.argumentNotNull(options, "options");
 
         setup(options);
     }
@@ -86,7 +86,7 @@ public class MemoryCacheManager implements ICacheManager {
 
     @Override
     public Object get(String key, String region) {
-        Guard.ArgumentNullOrWhiteSpaceString(key, "key");
+        Guard.argumentNullOrWhiteSpaceString(key, "key");
         this.validateRegion(region);
 
         String name = getRegionName(region);
@@ -97,7 +97,7 @@ public class MemoryCacheManager implements ICacheManager {
 
     @Override
     public void set(String key, Object data, Long timeoutMilliseconds, String region, boolean useSlidingExpiration) {
-        Guard.ArgumentNullOrWhiteSpaceString(key, "key");
+        Guard.argumentNullOrWhiteSpaceString(key, "key");
         this.validateRegion(region);
         if (data == null) {
             this.remove(key, region);
