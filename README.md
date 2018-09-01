@@ -3,9 +3,7 @@ A cache structure that supports expiration on a per-key basis.
 
 
 ![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)
-
-
-[![Maven metadata URL](https://img.shields.io/maven-metadata/v/http/central.maven.org/maven2/com/google/code/gson/gson/maven-metadata.xml.svg)](http://central.maven.org/maven2/com/labijie/labijie-caching/maven-metadata.xml)
+[![Maven metadata URL](https://img.shields.io/maven-metadata/v/http/central.maven.org/maven2/com/labijie/labijie-caching/maven-metadata.xml.svg)](http://central.maven.org/maven2/com/labijie/labijie-caching)
 
 
 example:
