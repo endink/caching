@@ -5,6 +5,25 @@ A cache structure that supports expiration on a per-key basis.
 ![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)
 [![Maven metadata URL](https://img.shields.io/maven-metadata/v/http/central.maven.org/maven2/com/labijie/labijie-caching/maven-metadata.xml.svg)](http://central.maven.org/maven2/com/labijie/labijie-caching)
 
+All of the jar packages has been uploaded to the maven central.
+
+
+## add depenedency in gradle project
+
+Use memory cahce only:
+```groovy
+dependencies {
+    compile "com.labijie:labijie-caching:1.0"
+}
+```
+
+for redis:
+```groovy
+dependencies {
+    compile "com.labijie:labijie-caching-redis:1.0"
+}
+```
+
 
 example:
 ```
@@ -24,7 +43,7 @@ memoryCache.get("a")
 
 use SingleRedisCacheManager for redis support
 
-# Maven usage
+# Maven local usage
 
 ## install to maven local repo:
 gradle uploadArchives
@@ -56,9 +75,3 @@ mavenDeployer {
 
 gradle -Dmu="my" -Dmp="mypwd" uploadArchives
 
-## add depenedency in gradle project
-
-dependencies {
-    compile "com.labijie:labijie-caching:1.0"
-    compile "com.labijie:labijie-caching-redis:1.0"
-}
