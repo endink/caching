@@ -24,8 +24,10 @@ dependencies {
 }
 ```
 
+# Quick Start
+You only need to use the ICacheManager interface, which can be easily integrated into the IOC container, such as spring.
+use 
 
-example:
 ```
 ICacheManager memoryCache = new MemoryCache(new MemoryCacheOptions());
 
