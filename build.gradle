@@ -4,7 +4,7 @@ apply plugin: 'signing'
 
 ext {
     junit_version = '4.12'
-    global_version = '1.0-SNAPSHOT'
+    global_version = '1.0'
 }
 
 group 'com.labijie'
@@ -19,17 +19,18 @@ repositories {
 }
 
 
-
-allprojects {
-    [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-}
-
-
 subprojects {
 
     apply plugin: 'java'
     apply plugin: 'maven'
     apply plugin: 'signing'
+
+    javadoc {
+        options.encoding = 'UTF-8'
+        options.addStringOption('Xdoclint:none', '-quiet')
+    }
+
+    [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
     repositories {
         mavenLocal()
@@ -52,16 +53,20 @@ subprojects {
     artifacts {
         //archives jar
         archives sourcesJar
-        //archives javadocJar
+        archives javadocJar
     }
 
-
+    signing {
+        sign configurations.archives
+    }
     //sign configurations.archives
 
     uploadArchives {
         if (!project.name.startsWith("dummy")) {
 
             System.out.println("deployer --->" + project.name)
+
+
 
             repositories {
                 mavenDeployer {
@@ -87,6 +92,8 @@ subprojects {
                         }
 
                         pom.project {
+                            name  project.name
+                            description  'labijie caching library'
                             artifactId "labijie-caching" + (project.name == "core" ? "" : "-" + project.name)
                             version project.rootProject.version
                             url 'https://github.com/endink/caching'
@@ -97,6 +104,12 @@ subprojects {
                                     distribution 'labijie.com'
                                 }
                             }
+                            scm {
+                                url 'scm:git@github.com:endink/caching.git'
+                                connection 'scm:git@github.com:endink/caching.git'
+                                developerConnection 'git@github.com:endink/caching.git'
+                            }
+
                             developers {
                                 developer {
                                     id 'labijie.com'
