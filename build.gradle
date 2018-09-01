@@ -1,10 +1,10 @@
-
 apply plugin: 'java'
 apply plugin: 'maven'
+apply plugin: 'signing'
 
-ext{
+ext {
     junit_version = '4.12'
-    global_version = '1.0'
+    global_version = '1.0-SNAPSHOT'
 }
 
 group 'com.labijie'
@@ -18,7 +18,19 @@ repositories {
     mavenCentral()
 }
 
+
+
+allprojects {
+    [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+}
+
+
 subprojects {
+
+    apply plugin: 'java'
+    apply plugin: 'maven'
+    apply plugin: 'signing'
+
     repositories {
         mavenLocal()
         mavenCentral()
@@ -26,6 +38,25 @@ subprojects {
 
     version = global_version
 
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        classifier 'sources'
+        from sourceSets.main.allSource
+    }
+
+    task javadocJar(type: Jar) {
+        classifier = "javadoc"
+        from javadoc
+    }
+
+    artifacts {
+        //archives jar
+        archives sourcesJar
+        //archives javadocJar
+    }
+
+
+    //sign configurations.archives
 
     uploadArchives {
         if (!project.name.startsWith("dummy")) {
@@ -36,7 +67,7 @@ subprojects {
                 mavenDeployer {
                     repository(url: "file://" + System.properties['user.home'] + "/.m2/repository")
                     pom.project {
-                        artifactId "labijie-caching" + (project.name == "core" ?  "" : "-" + project.name)
+                        artifactId "labijie-caching" + (project.name == "core" ? "" : "-" + project.name)
                         version project.rootProject.version
                     }
                 }
@@ -44,21 +75,42 @@ subprojects {
                 def u = System.properties.getProperty("mu")
                 def p = System.properties.getProperty("mp")
 
-                if(u != null && p != null && !u.isEmpty() && !p.isEmpty()) {
+                if (u != null && p != null && !u.isEmpty() && !p.isEmpty()) {
 
-                    System.out.println("nexus deploy user: " + u)
+                    System.out.println("maven deploy user: " + u)
 
                     mavenDeployer {
-                        pom.project {
-                            artifactId "labijie-caching" + (project.name == "core" ?  "" : "-" + project.name)
-                            version project.rootProject.version
+
+                        beforeDeployment { MavenDeployment deployment ->
+                            System.out.println("sign: " + u)
+                            signing.signPom(deployment)
                         }
 
-                        snapshotRepository(url: "http://nexus:26135/repository/maven-snapshots/") {
+                        pom.project {
+                            artifactId "labijie-caching" + (project.name == "core" ? "" : "-" + project.name)
+                            version project.rootProject.version
+                            url 'https://github.com/endink/caching'
+                            licenses {
+                                license {
+                                    name 'The Apache Software License, Version 2.0'
+                                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                                    distribution 'labijie.com'
+                                }
+                            }
+                            developers {
+                                developer {
+                                    id 'labijie.com'
+                                    name 'AndersXiao'
+                                    email 'sharping@outlook.com'
+                                }
+                            }
+                        }
+
+                        snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots") {
                             authentication(userName: u, password: p)
                         }
 
-                        repository(url: "http://nexus:26135/repository/maven-releases/") {
+                        repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2") {
                             authentication(userName: u, password: p)
                         }
                     }
