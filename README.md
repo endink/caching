@@ -29,7 +29,7 @@ You only need to use the ICacheManager interface, which can be easily integrated
 use 
 
 ```
-ICacheManager memoryCache = new MemoryCache(new MemoryCacheOptions());
+ICacheManager memoryCache = new MemoryCacheManager(new MemoryCacheOptions());
 
 //sliding time expires
 memoryCache.set("2", new Object(), 3000L, true);
