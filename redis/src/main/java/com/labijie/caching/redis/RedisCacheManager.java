@@ -3,6 +3,7 @@ package com.labijie.caching.redis;
 import com.labijie.caching.Guard;
 import com.labijie.caching.ICacheManager;
 import com.labijie.caching.StringUtil;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.HostAndPort;
@@ -90,7 +91,12 @@ public abstract class RedisCacheManager implements ICacheManager {
             synchronized (this){
                 if(pool == null){
                     HostAndPort hp = this.getServers().stream().findFirst().get();
-                    pool = new JedisPool(hp.getHost(),hp.getPort());
+                    pool = new JedisPool(new GenericObjectPoolConfig(),
+                            hp.getHost(),
+                            hp.getPort(),
+                            this.options.getTimeoutMills(),
+                            this.options.getPassword(),
+                            this.options.getDatabase());
                 }
             }
         }

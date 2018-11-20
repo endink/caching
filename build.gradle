@@ -4,7 +4,7 @@ apply plugin: 'signing'
 
 ext {
     junit_version = '4.12'
-    global_version = '1.0'
+    global_version = '1.0.1'
 }
 
 group 'com.labijie'

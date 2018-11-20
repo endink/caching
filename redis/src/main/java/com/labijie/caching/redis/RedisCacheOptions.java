@@ -2,6 +2,7 @@ package com.labijie.caching.redis;
 
 import com.labijie.caching.StringUtil;
 import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.Protocol;
 
 /**
  * Created by ax03 on 2017/7/11.
@@ -14,6 +15,8 @@ public class RedisCacheOptions {
     private int timeoutMills;
     private boolean useGzip;
     private String serializer;
+    private String password;
+    private Integer database;
 
     public String getSerializer() {
         return StringUtil.isNullOrWhiteSpace(serializer) ? "json" : serializer.trim();
@@ -71,5 +74,21 @@ public class RedisCacheOptions {
 
     public void setServer(String server) {
         this.server = server;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Integer getDatabase() {
+        return Math.max(Protocol.DEFAULT_DATABASE, this.database);
+    }
+
+    public void setDatabase(Integer database) {
+        this.database =  database;
     }
 }
