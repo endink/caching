@@ -159,7 +159,7 @@ public class SingleRedisCacheManager extends RedisCacheManager {
                         String.valueOf((!useSlidingExpiration && timeoutMills != null) ? creationTime + timeoutMills : NOT_PRESENT),
                         String.valueOf((useSlidingExpiration && timeoutMills != null) ? timeoutMills : NOT_PRESENT),
                         String.valueOf(timeoutMills != null ? timeoutMills / 1000 : NOT_PRESENT),
-                        this.serializeData(data, this.getOptions().getSerializer(), this.getOptions().isUseGzip()),
+                        this.serializeData(this.getOptions().getSerializer(), data, this.getOptions().isUseGzip()),
                         data.getClass().getName(),
                         String.valueOf(this.getOptions().isUseGzip()),
                         this.getOptions().getSerializer()
@@ -174,37 +174,15 @@ public class SingleRedisCacheManager extends RedisCacheManager {
         }
     }
 
-    private <T> T deserializeData(String serName, Class<T> type, String data, boolean gzipCompress) {
-        if (data == null) {
-            return null;
-        }
-        String content = data;
-        try {
-            if (gzipCompress) {
-                content = StringUtil.gunzip(data);
-            }
-            return this.jacksonMapper.readValue(content, type);
-        } catch (Exception ex) {
-            this.getLogger().error(String.format("反序列化时发生错误 ( compress:%s, class: %s )。", gzipCompress, type.getSimpleName()), ex);
-            throw new RuntimeException(ex);
-        }
+    private <T> T deserializeData(String serializerName, Class<T> type, String data, boolean gzipCompress) {
+        ICacheDataSerializer ser = CacheDataSerializerRegistry.DEFAULT.getSerializer(serializerName);
+        return ser.deserializeData(type, data, gzipCompress);
     }
 
 
-    private String serializeData(Object data, String serializerName, boolean gzipCompress) {
-        if (data == null) {
-            return null;
-        }
-        try {
-            String json = this.jacksonMapper.writeValueAsString(data);
-            if (gzipCompress) {
-                json = StringUtil.gzip(json);
-            }
-            return json;
-        } catch (Exception ex) {
-            this.getLogger().error(String.format("序列化时发生错误 ( compress:%s, class: %s )。", gzipCompress, data.getClass().getSimpleName()));
-            throw new RuntimeException(ex);
-        }
+    private String serializeData(String serializerName, Object data,  boolean gzipCompress) {
+        ICacheDataSerializer ser = CacheDataSerializerRegistry.DEFAULT.getSerializer(serializerName);
+        return ser.serializeData(data, gzipCompress);
     }
 
 
